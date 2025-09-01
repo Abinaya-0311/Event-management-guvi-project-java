@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup</title>
+    <style>
+        body {font-family: Arial, sans-serif; background:#e9f7ef; display:flex; justify-content:center; align-items:center; height:100vh;}
+        .container {background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); width:380px;}
+        h2 {text-align:center; margin-bottom:20px;}
+        input, select, button {width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc;}
+        button {background:#28a745; color:#fff; border:none; cursor:pointer;}
+        button:hover {background:#218838;}
+        .success {color:green; text-align:center;}
+        .error {color:red; text-align:center;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Signup</h2>
+    <div id="message"></div>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <select id="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+    <input type="date" id="dob" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <select id="role">
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+    </select>
+    <button onclick="signup()">Signup</button>
+    <p style="text-align:center;">Already have an account? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+    async function signup() {
+        const user = {
+            name: document.getElementById("name").value,
+            gender: document.getElementById("gender").value,
+            dob: document.getElementById("dob").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            role: document.getElementById("role").value
+        };
+
+        try {
+            const response = await fetch("http://localhost:8081/auth/signup", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify(user)
+            });
+
+            const data = await response.text();
+            if(data.includes("successful")) {
+                document.getElementById("message").innerHTML = "<p class='success'>Signup successful! Go to Login.</p>";
+            } else {
+                document.getElementById("message").innerHTML = "<p class='error'>" + data + "</p>";
+            }
+        } catch(err) {
+            console.error(err);
+            document.getElementById("message").innerHTML = "<p class='error'>Signup failed! Try again.</p>";
+        }
+    }
+</script>
+</body>
+</html>

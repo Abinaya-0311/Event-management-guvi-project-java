@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {font-family: Arial, sans-serif; background:#f1f1f1; padding:20px;}
+        h2 {text-align:center;}
+        .form, .event-list {margin:20px auto; width:80%; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+        input, button {padding:10px; margin:8px; border-radius:6px; border:1px solid #ccc;}
+        button {background:#28a745; color:#fff; border:none; cursor:pointer;}
+        button:hover {background:#218838;}
+        .delete {background:#dc3545; margin-left:10px;}
+    </style>
+</head>
+<body>
+<h2>Admin Dashboard</h2>
+
+<div class="form">
+    <h3>Create Event</h3>
+    <input type="text" id="name" placeholder="Event Name" required>
+    <input type="text" id="location" placeholder="Location" required>
+    <input type="date" id="date" required>
+    <button onclick="createEvent()">Create</button>
+</div>
+
+<div class="event-list">
+    <h3>Manage Events</h3>
+    <div id="events"></div>
+</div>
+
+<script>
+    async function fetchEvents() {
+        const res = await fetch("http://localhost:8081/events");
+        const events = await res.json();
+        const container = document.getElementById("events");
+        container.innerHTML = "";
+        events.forEach(ev => {
+            container.innerHTML += `<p><b>${ev.eventName}</b> - ${ev.location} - ${ev.eventDate}
+              <button class="delete" onclick="deleteEvent(${ev.id})">Delete</button></p>`;
+        });
+    }
+
+    async function createEvent() {
+        const event = {
+            eventName: document.getElementById("name").value,
+            location: document.getElementById("location").value,
+            eventDate: document.getElementById("date").value
+        };
+        await fetch("http://localhost:8081/events", {
+            method:"POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(event)
+        });
+        fetchEvents();
+    }
+
+    async function deleteEvent(eventId) {
+        await fetch(`http://localhost:8081/events/${eventId}`, {method:"DELETE"});
+        fetchEvents();
+    }
+
+    // Fetch events on page load
+    fetchEvents();
+</script>
+</body>
+</html>

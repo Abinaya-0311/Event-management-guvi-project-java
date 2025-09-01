@@ -1,7 +1,7 @@
 package com.example.demoEventManagement.Repositories;
 
-import com.example.demoEventManagement.Entities.Attendance;
 import com.example.demoEventManagement.Entities.Event;
+import com.example.demoEventManagement.Entities.Ticket;
 import com.example.demoEventManagement.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AttendanceRepository extends JpaRepository<Attendance,Long>
+public interface TicketRepository extends JpaRepository<Ticket,Long>
 {
-    List<Attendance> findByEvent(Event event);
+    List<Ticket> findByUser(User user);
 
-    List<Attendance> findByUser(User user);
+    List<Ticket> findByEvent(Event event);
 
-    Attendance findByUserAndEvent(User user, Event event);
+    Ticket findByBookingId(String bookingId);
 }

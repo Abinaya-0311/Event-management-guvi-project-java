@@ -1,29 +1,40 @@
 package com.example.demoEventManagement.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Event
-{
+@Table(name = "events")
+public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String description;
-    private String venue;
-    private String speaker;
+    @Column(name = "event_name")   // match DB column
+    private String eventName;
 
-    private LocalDateTime date;
+    @Column(name = "location")     // match DB column
+    private String location;
+
+    @Column(name = "event_date")   // match DB column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate eventDate;
+
+    // getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public LocalDate getEventDate() { return eventDate; }
+    public void setEventDate(LocalDate eventDate) { this.eventDate = eventDate; }
 }

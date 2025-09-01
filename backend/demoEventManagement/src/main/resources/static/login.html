@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {font-family: Arial, sans-serif; background:#f5f5f5; display:flex; justify-content:center; align-items:center; height:100vh;}
+        .container {background:#fff; padding:30px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); width:350px;}
+        h2 {text-align:center; margin-bottom:20px;}
+        input, button {width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc;}
+        button {background:#007bff; color:#fff; border:none; cursor:pointer;}
+        button:hover {background:#0056b3;}
+        .error {color:red; text-align:center;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <div class="error" id="error"></div>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+    <p style="text-align:center;">Don’t have an account? <a href="signup.html">Signup</a></p>
+</div>
+
+<script>
+    async function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const response = await fetch("http://localhost:8081/auth/login", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({email, password})
+            });
+
+            const data = await response.text(); // backend returns 'USER' or 'ADMIN'
+
+            if(data === "USER") {
+                window.location.href = "user-dashboard.html?email=" + encodeURIComponent(email);
+            } else if(data === "ADMIN") {
+                window.location.href = "admin-dashboard.html?email=" + encodeURIComponent(email);
+            } else {
+                document.getElementById("error").innerText = "Invalid credentials!";
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById("error").innerText = "Server error!";
+        }
+    }
+</script>
+</body>
+</html>
