@@ -1,0 +1,6 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "./backend/mvn -f backend/pom.xml clean package -DskipTests"
+
+[deploy]
+startCommand = "java -jar backend/target/*.jar"
